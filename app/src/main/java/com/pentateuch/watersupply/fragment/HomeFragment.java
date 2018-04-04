@@ -32,10 +32,10 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_home, container, false);
         products.add(new Product("Product1","Large can",R.drawable.can_1,40.0f));
-        products.add(new Product("Product2","Two Large can",R.drawable.can_1,40.0f,"2 Can"));
-        products.add(new Product("Product3","Small can",R.drawable.can_1,40.0f));
-        products.add(new Product("Product4","Multiple Small can",R.drawable.can_1,40.0f, "Carton"));
-        
+        products.add(new Product("Product2","Two Large can",R.drawable.can_2,80.0f,"2 Can"));
+        products.add(new Product("Product3","Small can",R.drawable.can_3,15.0f));
+        products.add(new Product("Product4","Multiple Small can",R.drawable.can_4,250.0f, "Carton"));
+
         return mView;
     }
 
