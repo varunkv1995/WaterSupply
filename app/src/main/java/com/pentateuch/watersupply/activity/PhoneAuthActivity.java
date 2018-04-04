@@ -180,10 +180,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 break;
             case STATE_VERIFY_SUCCESS:
                 Toast.makeText(PhoneAuthActivity.this, "Verification success", Toast.LENGTH_LONG).show();
-                FirebaseDatabase.getInstance().getReference().child("RegisteredUsers").child(user.getUid()).child("verified").setValue(true).addOnCompleteListener(this);
-                ProgressBar progressBar = findViewById(R.id.auth_progress);
-                progressBar.setVisibility(View.VISIBLE);
-                layoutMain.setVisibility(View.GONE);
+                updateDb();
                 break;
             case STATE_SIGNIN_FAILED:
                 // No-op, handled by sign-in check
@@ -208,6 +205,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     mVerificationField.setError("Cannot be empty.");
                     return;
                 }
+                if(mVerificationId.equals(code))
+                    updateDb();
                 break;
             case R.id.button_resend:
                 resendVerificationCode(phoneNumber, mResendToken);
@@ -215,6 +214,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         }
     }
 
+    private void updateDb(){
+        FirebaseDatabase.getInstance().getReference().child("RegisteredUsers").child(user.getUid()).child("verified").setValue(true).addOnCompleteListener(this);
+        ProgressBar progressBar = findViewById(R.id.auth_progress);
+        progressBar.setVisibility(View.VISIBLE);
+        layoutMain.setVisibility(View.GONE);
+    }
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         Intent intent = new Intent(PhoneAuthActivity.this, MainActivity.class);
