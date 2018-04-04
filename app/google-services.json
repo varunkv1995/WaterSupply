@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "105174210580",
+    "firebase_url": "https://watersupply-48c7d.firebaseio.com",
+    "project_id": "watersupply-48c7d",
+    "storage_bucket": "watersupply-48c7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105174210580:android:8d715fa2016e307f",
+        "android_client_info": {
+          "package_name": "com.pentateuch.watersupply"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105174210580-4h7vienl4n3ot5lcfkc2n48ptvi8secu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pentateuch.watersupply",
+            "certificate_hash": "dc6caf9728520e63bd580208a4c9468badfc4322"
+          }
+        },
+        {
+          "client_id": "105174210580-bbid412tkqmuto7ddffhmvja1fcp31ch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjocu2gsr9OFVAOx8GOi2pBk-xC_7wOeY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105174210580-bbid412tkqmuto7ddffhmvja1fcp31ch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
