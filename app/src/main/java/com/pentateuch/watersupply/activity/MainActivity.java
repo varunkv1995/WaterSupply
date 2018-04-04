@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     }
 
     @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+    protected void onStart() {
+        super.onStart();
         boolean verified = App.getInstance().getValue("isPhoneVerified", false);
         if (!verified) {
             User user = App.getInstance().getUser();
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
             DatabaseReference reference = database.getReference().child("RegisteredUsers").child(user.getUid());
             reference.addValueEventListener(this);
         }
-        return super.onCreateView(parent, name, context, attrs);
     }
 
     @Override

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -26,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PhoneAuthActivity extends AppCompatActivity implements
@@ -42,16 +45,17 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private static final int STATE_SIGNIN_SUCCESS = 6;
     // [START declare_auth]
     private boolean mVerificationInProgress = false;
-    private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private EditText mVerificationField;
-    private Button mVerifyButton;
-    private Button mResendButton;
     private RelativeLayout layoutMain;
     private String phoneNumber = "9008980341";
     private FirebaseUser user;
+    private String mVerificationId;
+    private ProgressBar progressBar;
 
+    public PhoneAuthActivity(){
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +77,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
         mVerificationField = (EditText) findViewById(R.id.field_verification_code);
 
-        mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
-        mResendButton = (Button) findViewById(R.id.btn_resend);
+        Button mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
+        Button mResendButton = (Button) findViewById(R.id.btn_resend);
+        progressBar = findViewById(R.id.auth_progress);
         layoutMain = findViewById(R.id.root_auth);
 
         mVerifyButton.setOnClickListener(this);
@@ -109,8 +114,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                                    PhoneAuthProvider.ForceResendingToken token) {
 
                 Log.d(TAG, "onCodeSent:" + verificationId);
-
-                // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
 
@@ -205,21 +208,47 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     mVerificationField.setError("Cannot be empty.");
                     return;
                 }
-                if(mVerificationId.equals(code))
-                    updateDb();
+                verify(code);
                 break;
-            case R.id.button_resend:
+            case R.id.btn_resend:
                 resendVerificationCode(phoneNumber, mResendToken);
                 break;
         }
     }
 
+    private void verify(String code) {
+        showProgress(true);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId,code);
+        auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful())
+                    updateDb();
+                else {
+                    showProgress(false);
+                    mVerificationField.setError("Wrong OTP");
+                }
+            }
+        });
+    }
+
     private void updateDb(){
         FirebaseDatabase.getInstance().getReference().child("RegisteredUsers").child(user.getUid()).child("verified").setValue(true).addOnCompleteListener(this);
-        ProgressBar progressBar = findViewById(R.id.auth_progress);
-        progressBar.setVisibility(View.VISIBLE);
-        layoutMain.setVisibility(View.GONE);
+        showProgress(true);
     }
+
+    private void showProgress(boolean show){
+        if(show) {
+            progressBar.setVisibility(View.VISIBLE);
+            layoutMain.setVisibility(View.GONE);
+        }
+        else {
+            progressBar.setVisibility(View.GONE);
+            layoutMain.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         Intent intent = new Intent(PhoneAuthActivity.this, MainActivity.class);

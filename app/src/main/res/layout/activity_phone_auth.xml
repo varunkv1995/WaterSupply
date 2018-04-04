@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background_main"
     android:fitsSystemWindows="true">
 
     <ProgressBar
@@ -13,11 +14,10 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:id="@+id/root_auth"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/background_main">
+        android:layout_height="fill_parent">
 
         <TextView
             android:id="@+id/textView"
@@ -58,7 +58,6 @@
 
 
         <LinearLayout
-            android:id="@+id/button_resend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/field_verification_code"
