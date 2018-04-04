@@ -7,7 +7,9 @@ import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
+import com.pentateuch.watersupply.model.User;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -26,6 +28,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(i);
                 } else {
+                    App.getInstance().setUser(new User(currentUser.getUid(), currentUser.getDisplayName(),currentUser.getPhoneNumber(),currentUser.getEmail()));
                     Intent i = new Intent(SplashActivity.this, MainActivity.class);
                     i.putExtra("email",currentUser.getEmail());
                     startActivity(i);

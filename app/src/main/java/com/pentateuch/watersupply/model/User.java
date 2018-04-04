@@ -5,17 +5,44 @@ package com.pentateuch.watersupply.model;
  */
 
 public class User {
-    private String name, number, email, password, address, pincode;
 
+    private String uid;
+    private String name, number, email, address, pincode;
+    private boolean verified;
 
-    public User(String name, String number, String email, String password, String address, String pincode) {
+    public User(String uid, String name, String number, String email) {
+        this.uid = uid;
         this.name = name;
         this.number = number;
         this.email = email;
-        this.password = password;
+    }
+    public User() {
+
+    }
+
+    /**
+     * @param name    name of user
+     * @param number
+     * @param email
+     * @param address
+     * @param pincode
+     */
+    public User(String name, String number, String email, String address, String pincode) {
+        this.name = name;
+        this.number = number;
+        this.email = email;
         this.address = address;
         this.pincode = pincode;
 
+    }
+
+    public User(String name, String number, String email, String address, String pincode, boolean verified) {
+        this.name = name;
+        this.number = number;
+        this.email = email;
+        this.address = address;
+        this.pincode = pincode;
+        this.verified = verified;
     }
 
 
@@ -43,14 +70,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -65,6 +84,14 @@ public class User {
 
     public void setPincode(String pincode) {
         this.pincode = pincode;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public String getUid() {
+        return uid;
     }
 }
 

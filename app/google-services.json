@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "105174210580-t8jruh3db0grplmjq9lko0098d9ekdjq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pentateuch.watersupply",
+            "certificate_hash": "99c47932fe0628a8e37fa7d4fd246d9ec9c0ee2d"
+          }
+        },
+        {
+          "client_id": "105174210580-3or2b7tb8kbsvgd0697qcgr48885i4fj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pentateuch.watersupply",
+            "certificate_hash": "a5ecd3eb44491406ca6a84e7110d8a673c1f260b"
+          }
+        },
+        {
           "client_id": "105174210580-4h7vienl4n3ot5lcfkc2n48ptvi8secu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

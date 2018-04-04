@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.pentateuch.watersupply.model.User;
+
 /**
  * Created by varu on 03-04-2018.
  */
@@ -12,9 +14,17 @@ public class App extends Application {
     private SharedPreferences mPreferences;
 
     private static App instance;
-
+    private User user;
     public static App getInstance() {
         return instance;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public  void setUser(User user) {
+        this.user = user;
     }
 
 

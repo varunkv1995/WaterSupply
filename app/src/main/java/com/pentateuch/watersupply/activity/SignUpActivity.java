@@ -2,10 +2,10 @@ package com.pentateuch.watersupply.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -17,16 +17,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.User;
 
 public class SignUpActivity extends AppCompatActivity implements OnCompleteListener<AuthResult> {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
-    private EditText editTextUser,editTextNumber,editTextPass,editTextCPass,editTextAddress,editTextPin,editTextEmail;
+    private EditText editTextUser, editTextNumber, editTextPass, editTextCPass, editTextAddress, editTextPin, editTextEmail;
     private ProgressDialog dialog;
     private User user;
     private LinearLayout rootLayout;
@@ -44,11 +45,10 @@ public class SignUpActivity extends AppCompatActivity implements OnCompleteListe
         editTextPin = (EditText) findViewById(R.id.editTextPin);
         Button button = (Button) findViewById(R.id.buttonNext);
         mAuth = FirebaseAuth.getInstance();
-        databaseReference= FirebaseDatabase.getInstance().getReference().child("RegisteredUsers");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("RegisteredUsers");
         rootLayout = findViewById(R.id.root_sign_up);
 
         button.setOnClickListener(new View.OnClickListener() {
-
 
 
             @Override
@@ -107,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity implements OnCompleteListe
                 }
                 dialog.show();
 
-                user=new User(name,number,email,password,address,pin);
+                user = new User(name, number, email, address, pin);
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this);
 
             }
@@ -118,13 +118,15 @@ public class SignUpActivity extends AppCompatActivity implements OnCompleteListe
     @Override
     public void onComplete(@NonNull Task<AuthResult> task) {
         dialog.dismiss();
-        if (task.isSuccessful()){
-            databaseReference.push().setValue(user);
+        if (task.isSuccessful()) {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null)
+                databaseReference.child(currentUser.getUid()).setValue(user);
+            App.getInstance().setUser(user);
             Intent intent = new Intent(SignUpActivity.this, PhoneAuthActivity.class);
-            intent.putExtra("phone",user.getNumber());
+            intent.putExtra("phone", user.getNumber());
             startActivity(intent);
-        }
-        else {
+        } else {
             try {
                 throw task.getException();
             } catch (FirebaseAuthUserCollisionException e) {

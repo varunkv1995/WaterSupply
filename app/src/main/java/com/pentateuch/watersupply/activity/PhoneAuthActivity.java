@@ -2,30 +2,36 @@ package com.pentateuch.watersupply.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 
 import java.util.concurrent.TimeUnit;
 
 public class PhoneAuthActivity extends AppCompatActivity implements
-        View.OnClickListener {
+        View.OnClickListener, OnCompleteListener<Void> {
 
     private static final String TAG = "PhoneAuthActivity";
-
     private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
 
     private static final int STATE_INITIALIZED = 1;
@@ -42,6 +48,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private EditText mVerificationField;
     private Button mVerifyButton;
     private Button mResendButton;
+    private RelativeLayout layoutMain;
     private String phoneNumber = "9008980341";
     private FirebaseUser user;
 
@@ -68,6 +75,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
         mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
         mResendButton = (Button) findViewById(R.id.btn_resend);
+        layoutMain = findViewById(R.id.root_auth);
 
         mVerifyButton.setOnClickListener(this);
         mResendButton.setOnClickListener(this);
@@ -163,22 +171,19 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
                 break;
             case STATE_CODE_SENT:
-
                 //  mDetailText.setText(R.string.status_code_sent);
-                Toast.makeText(PhoneAuthActivity.this, "code sent", Toast.LENGTH_LONG).show();
+                Toast.makeText(PhoneAuthActivity.this, "OTP Sent", Toast.LENGTH_LONG).show();
                 break;
             case STATE_VERIFY_FAILED:
                 //  mDetailText.setText(R.string.status_verification_failed);
-                Toast.makeText(PhoneAuthActivity.this, "verification failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(PhoneAuthActivity.this, "Verification failed", Toast.LENGTH_LONG).show();
                 break;
             case STATE_VERIFY_SUCCESS:
-
-                Toast.makeText(PhoneAuthActivity.this, "verification success", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(PhoneAuthActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-
+                Toast.makeText(PhoneAuthActivity.this, "Verification success", Toast.LENGTH_LONG).show();
+                FirebaseDatabase.getInstance().getReference().child("RegisteredUsers").child(user.getUid()).child("verified").setValue(true).addOnCompleteListener(this);
+                ProgressBar progressBar = findViewById(R.id.auth_progress);
+                progressBar.setVisibility(View.VISIBLE);
+                layoutMain.setVisibility(View.GONE);
                 break;
             case STATE_SIGNIN_FAILED:
                 // No-op, handled by sign-in check
@@ -208,5 +213,14 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 resendVerificationCode(phoneNumber, mResendToken);
                 break;
         }
+    }
+
+    @Override
+    public void onComplete(@NonNull Task<Void> task) {
+        Intent intent = new Intent(PhoneAuthActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

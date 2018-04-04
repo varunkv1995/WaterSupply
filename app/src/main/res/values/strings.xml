@@ -22,4 +22,5 @@
     <string name="verify_otp">Verify OTP</string>
     <string name="otp_text">We have sent you OTP to</string>
     <string name="verification">Verification</string>
+    <string name="logout">Logout</string>
 </resources>
