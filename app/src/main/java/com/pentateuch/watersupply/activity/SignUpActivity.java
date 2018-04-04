@@ -126,6 +126,7 @@ public class SignUpActivity extends AppCompatActivity implements OnCompleteListe
             Intent intent = new Intent(SignUpActivity.this, PhoneAuthActivity.class);
             intent.putExtra("phone", user.getNumber());
             startActivity(intent);
+            finish();
         } else {
             try {
                 throw task.getException();
