@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment {
         products.add(new Product("Product2","Two Large can",R.drawable.can_1,40.0f,"2 Can"));
         products.add(new Product("Product3","Small can",R.drawable.can_1,40.0f));
         products.add(new Product("Product4","Multiple Small can",R.drawable.can_1,40.0f, "Carton"));
+        
         return mView;
     }
 
