@@ -20,10 +20,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
+import com.pentateuch.watersupply.fragment.CartFragment;
 import com.pentateuch.watersupply.fragment.HomeFragment;
 import com.pentateuch.watersupply.model.User;
 
@@ -39,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     private int currentFragment;
     private DrawerLayout drawer;
     private Handler mHandler;
+    private FirebaseDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mHandler = new Handler();
+        database = FirebaseDatabase.getInstance();
     }
 
     @Override
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         boolean verified = App.getInstance().getValue("isPhoneVerified", false);
         if (!verified) {
             User user = App.getInstance().getUser();
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference reference = database.getReference().child("RegisteredUsers").child(user.getUid());
             reference.addValueEventListener(this);
         }
@@ -73,9 +74,10 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         final User value = dataSnapshot.getValue(User.class);
-        if (value != null)
+        if (value != null) {
+            App.getInstance().setUser(value);
             if (!value.isVerified()) {
-                Snackbar snackbar = Snackbar.make(rootLayout,"Verify your Phone No",Snackbar.LENGTH_INDEFINITE);
+                Snackbar snackbar = Snackbar.make(rootLayout, "Verify your Phone No", Snackbar.LENGTH_INDEFINITE);
                 snackbar.setAction("Verify", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -87,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
                 });
                 snackbar.show();
             }
+            else
+                App.getInstance().setValue("isPhoneVerified",true);
+        }
     }
 
     @Override
@@ -97,16 +102,16 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(this,LoginActivity.class);
+                Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 break;
@@ -115,10 +120,22 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     }
 
     @Override
+    public void onBackPressed() {
+        if (currentFragment != R.id.menu_home) {
+            loadFragment(R.id.menu_home);
+            return;
+        }
+        finish();
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.menu_home:
+                loadFragment(itemId);
+                break;
+            case R.id.menu_cart:
                 loadFragment(itemId);
                 break;
         }
@@ -127,16 +144,16 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         return true;
     }
 
-    private void loadFragment(int id){
+    private void loadFragment(int id) {
         currentFragment = id;
         final Fragment fragment = getFragment(id);
-        if(fragment != null) {
+        if (fragment != null) {
             final String tag = fragment.getClass().getSimpleName();
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_main, fragment,tag );
+                    fragmentTransaction.replace(R.id.fragment_main, fragment, tag);
                     fragmentTransaction.addToBackStack(tag);
                     fragmentTransaction.commit();
                 }
@@ -145,10 +162,13 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     }
 
     private Fragment getFragment(int id) {
-        switch (id){
-           case  R.id.menu_home:
-            setTitle("Home");
-            return new HomeFragment();
+        switch (id) {
+            case R.id.menu_home:
+                setTitle("Home");
+                return new HomeFragment();
+            case R.id.menu_cart:
+                setTitle("Cart");
+                return new CartFragment();
         }
         return null;
     }
