@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -20,7 +21,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
+import com.pentateuch.watersupply.model.User;
 
 /**
  * A login screen that offers login via email/password.
@@ -38,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
     private FirebaseAuth auth;
 
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            //Firebasea
+            //Firebase
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -123,9 +128,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("email", email);
+                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if (currentUser != null)
+                            App.getInstance().setUser(new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getPhoneNumber(), currentUser.getEmail()));
                         startActivity(intent);
-
                         finish();
                     } else {
                         Exception exception = task.getException();
@@ -152,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 5;
     }
 
     /**

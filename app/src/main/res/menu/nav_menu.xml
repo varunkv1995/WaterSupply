@@ -2,4 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_home"
         android:title="@string/home"/>
+    <item android:id="@+id/menu_cart"
+        android:title="@string/cart"/>
 </menu>
