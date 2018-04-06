@@ -3,6 +3,8 @@ package com.pentateuch.watersupply.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.Locale;
 
 public class Product implements Parcelable {
@@ -24,6 +26,8 @@ public class Product implements Parcelable {
     private int quantity;
     private float price;
     private String type;
+    private String data;
+    private String time;
     private String key;
 
     public Product(String name, int id, String desc, int drawable, float price) {
@@ -111,8 +115,13 @@ public class Product implements Parcelable {
     public int getId() {
         return id;
     }
-
+    @Exclude
     public String getCostInRs() {
+        return String.format(Locale.ENGLISH, "%.2f Rs", price);
+    }
+
+    @Exclude
+    public String getTotalCostInRs(){
         return String.format(Locale.ENGLISH, "%.2f Rs", price * quantity);
     }
 
@@ -122,5 +131,21 @@ public class Product implements Parcelable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
