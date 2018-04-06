@@ -43,18 +43,34 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return products.size();
     }
 
+    public void removeItem(int position) {
+        products.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public class CartViewHolder extends RecyclerView.ViewHolder{
+        private View backView,frontView;
         private ImageView productImageView;
         private TextView priceTextView;
         public CartViewHolder(View itemView) {
             super(itemView);
             priceTextView = itemView.findViewById(R.id.tv_cart_price);
             productImageView = itemView.findViewById(R.id.image_cart);
+            backView = itemView.findViewById(R.id.root_cart_back);
+            frontView = itemView.findViewById(R.id.root_cart_front);
         }
 
         void bind(Product product){
             productImageView.setImageResource(product.getDrawable());
             priceTextView.setText(product.getCostInRs());
+        }
+
+        public View getBackView() {
+            return backView;
+        }
+
+        public View getFrontView() {
+            return frontView;
         }
     }
 }

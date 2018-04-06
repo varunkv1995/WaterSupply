@@ -2,7 +2,6 @@ package com.pentateuch.watersupply.activity;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,26 +13,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.fragment.CartFragment;
 import com.pentateuch.watersupply.fragment.HomeFragment;
+import com.pentateuch.watersupply.fragment.ProfileFragment;
 import com.pentateuch.watersupply.model.User;
 
-public class MainActivity extends AppCompatActivity implements ValueEventListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private CoordinatorLayout rootLayout;
     private int currentFragment;
     private DrawerLayout drawer;
@@ -57,66 +50,40 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         navigationView.setNavigationItemSelectedListener(this);
         mHandler = new Handler();
         database = FirebaseDatabase.getInstance();
+        loadFragment(R.id.menu_home);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        loadFragment(R.id.menu_home);
         boolean verified = App.getInstance().getValue("isPhoneVerified", false);
+        User user = App.getInstance().getValueFromJson("current", new User());
+        App.getInstance().setUser(user);
         if (!verified) {
-            User user = App.getInstance().getUser();
-            DatabaseReference reference = database.getReference().child("RegisteredUsers").child(user.getUid());
-            reference.addValueEventListener(this);
+            if (!user.isVerified())
+                checkUserVerified(user);
         }
     }
 
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        final User value = dataSnapshot.getValue(User.class);
-        if (value != null) {
-            App.getInstance().setUser(value);
-            if (!value.isVerified()) {
-                Snackbar snackbar = Snackbar.make(rootLayout, "Verify your Phone No", Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction("Verify", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, PhoneAuthActivity.class);
-                        intent.putExtra("phone", value.getNumber());
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-                snackbar.show();
-            }
-            else
-                App.getInstance().setValue("isPhoneVerified",true);
-        }
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_logout:
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(this, LoginActivity.class);
+    private void checkUserVerified(final User user) {
+        Snackbar snackbar = Snackbar.make(rootLayout, "Verify your Phone No", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Verify", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PhoneAuthActivity.class);
+                intent.putExtra("phone", user.getNumber());
                 startActivity(intent);
                 finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+            }
+        });
+        snackbar.show();
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -137,6 +104,13 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
                 break;
             case R.id.menu_cart:
                 loadFragment(itemId);
+                break;
+
+            case R.id.menu_profile:
+                loadFragment(itemId);
+                break;
+            case R.id.menu_logout:
+                logout();
                 break;
         }
 
@@ -169,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
             case R.id.menu_cart:
                 setTitle("Cart");
                 return new CartFragment();
+            case R.id.menu_profile:
+                setTitle("Profile");
+                return new ProfileFragment();
         }
         return null;
     }

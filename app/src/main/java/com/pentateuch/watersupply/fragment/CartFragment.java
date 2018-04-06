@@ -2,12 +2,17 @@ package com.pentateuch.watersupply.fragment;
 
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,6 +24,7 @@ import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.adapter.CartAdapter;
 import com.pentateuch.watersupply.model.Product;
 import com.pentateuch.watersupply.model.User;
+import com.pentateuch.watersupply.utils.CartTouchHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +32,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CartFragment extends Fragment implements ValueEventListener {
+public class CartFragment extends Fragment implements ValueEventListener, CartTouchHelper.RecyclerItemTouchListener {
 
     private View rootView;
     private List<Product> products;
     private CartAdapter adapter;
+    private RecyclerView recyclerView;
+    private ProgressBar progressBar;
+    private DatabaseReference carts;
+    private boolean loaded;
 
     public CartFragment() {
         products = new ArrayList<>();
@@ -49,27 +59,47 @@ public class CartFragment extends Fragment implements ValueEventListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(view instanceof RecyclerView){
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setAdapter(adapter);
-        }
+        recyclerView = view.findViewById(R.id.recycle_cart);
+        recyclerView.setAdapter(adapter);
+        progressBar = view.findViewById(R.id.progress_cart);
         User user = App.getInstance().getUser();
-        FirebaseDatabase.getInstance().getReference().child("Carts").child(user.getUid()).addValueEventListener(this);
+        carts = FirebaseDatabase.getInstance().getReference().child("Carts").child(user.getUid());
+        carts.addValueEventListener(this);
+        ItemTouchHelper.SimpleCallback callback = new CartTouchHelper(0,ItemTouchHelper.LEFT,this);
+        new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
+        if(loaded)return;
         int start = products.size();
         for (DataSnapshot snapshot :
                 dataSnapshot.getChildren()) {
             Product product = snapshot.getValue(Product.class);
-            products.add(product);
+            if(product != null) {
+                product.setKey(snapshot.getKey());
+                products.add(product);
+            }
         }
         adapter.notifyItemRangeChanged(start,products.size());
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        loaded = true;
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
 
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos) {
+        if (viewHolder instanceof CartAdapter.CartViewHolder) {
+            final int deletedPos = viewHolder.getAdapterPosition();
+            final Product product = products.get(deletedPos);
+            carts.child(product.getKey()).removeValue();
+            adapter.removeItem(viewHolder.getAdapterPosition());
+
+        }
     }
 }

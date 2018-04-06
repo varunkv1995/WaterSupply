@@ -50,7 +50,10 @@
             android:name=".activity.PhoneAuthActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.ProductActivity" />
-        <activity android:name=".activity.CartActivity"></activity>
+        <activity android:name=".activity.CartActivity" />
+        <activity
+            android:name=".activity.AccountActivity"
+            android:label="Account" />
     </application>
 
 </manifest>

@@ -22,6 +22,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.User;
@@ -29,7 +34,7 @@ import com.pentateuch.watersupply.model.User;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ValueEventListener {
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -41,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
     private FirebaseAuth auth;
+    private FirebaseDatabase database;
+    private FirebaseUser currentUser;
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
@@ -73,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
     }
 
 
@@ -124,15 +132,11 @@ public class LoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    showProgress(false);
                     if (task.isSuccessful()) {
+                        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        DatabaseReference reference = database.getReference().child("RegisteredUsers").child(currentUser.getUid());
+                        reference.addValueEventListener(LoginActivity.this);
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                        if (currentUser != null)
-                            App.getInstance().setUser(new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getPhoneNumber(), currentUser.getEmail()));
-                        startActivity(intent);
-                        finish();
                     } else {
                         Exception exception = task.getException();
                         if (exception != null)
@@ -173,6 +177,25 @@ public class LoginActivity extends AppCompatActivity {
     public void signUp(View view) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        showProgress(false);
+        final User value = dataSnapshot.getValue(User.class);
+        if (value != null) {
+            value.setUid(currentUser.getUid());
+            App.getInstance().setValue("current",value);
+            App.getInstance().setUser(value);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        showProgress(false);
     }
 }
 

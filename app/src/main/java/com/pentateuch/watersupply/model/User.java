@@ -6,8 +6,17 @@ package com.pentateuch.watersupply.model;
 
 public class User {
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     private String uid;
-    private String name, number, email, address, pincode;
+    private String name, number, email, address, pinCode;
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
     private boolean verified;
 
     public User(String uid, String name, String number, String email) {
@@ -25,23 +34,23 @@ public class User {
      * @param number
      * @param email
      * @param address
-     * @param pincode
+     * @param pinCode
      */
-    public User(String name, String number, String email, String address, String pincode) {
+    public User(String name, String number, String email, String address, String pinCode) {
         this.name = name;
         this.number = number;
         this.email = email;
         this.address = address;
-        this.pincode = pincode;
+        this.pinCode = pinCode;
 
     }
 
-    public User(String name, String number, String email, String address, String pincode, boolean verified) {
+    public User(String name, String number, String email, String address, String pinCode, boolean verified) {
         this.name = name;
         this.number = number;
         this.email = email;
         this.address = address;
-        this.pincode = pincode;
+        this.pinCode = pinCode;
         this.verified = verified;
     }
 
@@ -78,12 +87,12 @@ public class User {
         this.address = address;
     }
 
-    public String getPincode() {
-        return pincode;
+    public String getPinCode() {
+        return pinCode;
     }
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 
     public boolean isVerified() {
