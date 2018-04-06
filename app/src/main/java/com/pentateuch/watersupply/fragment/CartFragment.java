@@ -2,11 +2,9 @@ package com.pentateuch.watersupply.fragment;
 
 
 import android.app.Fragment;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -21,10 +19,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
+import com.pentateuch.watersupply.activity.ProductActivity;
 import com.pentateuch.watersupply.adapter.CartAdapter;
 import com.pentateuch.watersupply.model.Product;
 import com.pentateuch.watersupply.model.User;
 import com.pentateuch.watersupply.utils.CartTouchHelper;
+import com.pentateuch.watersupply.utils.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CartFragment extends Fragment implements ValueEventListener, CartTouchHelper.RecyclerItemTouchListener {
+public class CartFragment extends Fragment implements ValueEventListener, CartTouchHelper.RecyclerItemTouchListener, OnItemClickListener {
 
     private View rootView;
     private List<Product> products;
@@ -52,7 +52,7 @@ public class CartFragment extends Fragment implements ValueEventListener, CartTo
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_cart, container, false);
-        adapter = new CartAdapter(rootView.getContext(),products);
+        adapter = new CartAdapter(rootView.getContext(),products, this);
         return rootView;
     }
 
@@ -101,5 +101,14 @@ public class CartFragment extends Fragment implements ValueEventListener, CartTo
             adapter.removeItem(viewHolder.getAdapterPosition());
 
         }
+    }
+
+    @Override
+    public void onClick(int position) {
+        Product product = products.get(position);
+        Intent intent = new Intent(getActivity(), ProductActivity.class);
+        intent.putExtra("product",product);
+        intent.putExtra("enableCart",false);
+        startActivity(intent);
     }
 }

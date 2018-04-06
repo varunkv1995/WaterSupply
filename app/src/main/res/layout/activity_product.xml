@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="addCart"
+            android:id="@+id/btn_product_cart"
             android:background="@drawable/ripple_effect"
             android:text="Add to Cart" />
 

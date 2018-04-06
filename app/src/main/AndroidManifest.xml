@@ -49,11 +49,22 @@
         <activity
             android:name=".activity.PhoneAuthActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ProductActivity" />
+        <activity
+            android:name=".activity.ProductActivity"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
         <activity android:name=".activity.CartActivity" />
         <activity
             android:name=".activity.AccountActivity"
-            android:label="Account" />
+            android:label="Account"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,13 +26,11 @@ import com.pentateuch.watersupply.model.User;
 
 public class ProductActivity extends AppCompatActivity implements OnCompleteListener<Void> {
     private Product product;
-    private TextView quantityTextView,totalTextView;
+    private TextView quantityTextView, totalTextView;
     private BottomSheetBehavior sheetBehavior;
-    private LinearLayout bottomLayout;
-    private TextView addressTextView;
     private User user;
 
-    public ProductActivity(){
+    public ProductActivity() {
         user = App.getInstance().getUser();
     }
 
@@ -40,36 +39,42 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
         Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.containsKey("product")) {
+        boolean cartVisible = false;
+        if (extras != null) {
             product = extras.getParcelable("product");
+            cartVisible = extras.getBoolean("enableCart", true);
         }
         ImageView productImageView = findViewById(R.id.image_product_view);
         productImageView.setImageResource(product.getDrawable());
         quantityTextView = findViewById(R.id.tv_product_quantity);
+        quantityTextView.setText(String.valueOf(product.getQuantity()));
         TextView priceTextView = findViewById(R.id.tv_product_price);
         String price = String.format("Price : %s Rs", product.getPrice());
         Spannable wordSpan = new SpannableString(price);
         wordSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 8, price.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         priceTextView.setText(wordSpan);
         totalTextView = findViewById(R.id.tv_total_cost);
-        totalTextView.setText(product.getCostInRs());
-        bottomLayout = findViewById(R.id.bottom_sheet);
+        totalTextView.setText(product.getTotalCostInRs());
+        LinearLayout bottomLayout = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(bottomLayout);
-        addressTextView = findViewById(R.id.tv_product_address);
+        TextView addressTextView = findViewById(R.id.tv_product_address);
         addressTextView.setText(user.getAddress());
+        Button cartButton = findViewById(R.id.btn_product_cart);
+        if (!cartVisible)
+            cartButton.setVisibility(View.GONE);
     }
 
     public void onIncrease(View view) {
         product.increaseQuantity();
         quantityTextView.setText(String.valueOf(product.getQuantity()));
-        totalTextView.setText(product.getCostInRs());
+        totalTextView.setText(product.getTotalCostInRs());
     }
 
     public void onDecrease(View view) {
-        if(product.getQuantity() > 1) {
+        if (product.getQuantity() > 1) {
             product.decreamentQuantity();
             quantityTextView.setText(String.valueOf(product.getQuantity()));
-            totalTextView.setText(product.getCostInRs());
+            totalTextView.setText(product.getTotalCostInRs());
         }
     }
 
@@ -88,8 +93,8 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
 
     @Override
     public void onComplete(@NonNull Task<Void> task) {
-        if(task.isSuccessful()){
-            Toast.makeText(this,"Added to Cart",Toast.LENGTH_SHORT).show();
+        if (task.isSuccessful()) {
+            Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
         }
     }
 }
