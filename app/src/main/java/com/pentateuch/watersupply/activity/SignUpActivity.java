@@ -123,6 +123,7 @@ public class SignUpActivity extends AppCompatActivity implements OnCompleteListe
             if (currentUser != null)
                 databaseReference.child(currentUser.getUid()).setValue(user);
             App.getInstance().setUser(user);
+            App.getInstance().setValue("current",user);
             Intent intent = new Intent(SignUpActivity.this, PhoneAuthActivity.class);
             intent.putExtra("phone", user.getNumber());
             startActivity(intent);

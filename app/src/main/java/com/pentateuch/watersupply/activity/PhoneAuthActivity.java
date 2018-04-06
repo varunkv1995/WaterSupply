@@ -251,6 +251,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
     @Override
     public void onComplete(@NonNull Task<Void> task) {
+        App.getInstance().setValue("isPhoneVerified", true);
         Intent intent = new Intent(PhoneAuthActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

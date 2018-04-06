@@ -1,9 +1,9 @@
 package com.pentateuch.watersupply;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
 import com.pentateuch.watersupply.model.User;
 
 /**
@@ -11,10 +11,10 @@ import com.pentateuch.watersupply.model.User;
  */
 
 public class App extends Application {
-    private SharedPreferences mPreferences;
-
     private static App instance;
+    private SharedPreferences mPreferences;
     private User user;
+
     public static App getInstance() {
         return instance;
     }
@@ -23,7 +23,7 @@ public class App extends Application {
         return user;
     }
 
-    public  void setUser(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -36,27 +36,50 @@ public class App extends Application {
 
     }
 
-    public void setValue(String key,String value){
+    public void setValue(String key, String value) {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(key,value);
+        editor.putString(key, value);
         editor.apply();
     }
 
-    public void setValue(String key,Boolean value){
+    public void setValue(String key, Boolean value) {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(key,value);
+        editor.putBoolean(key, value);
         editor.apply();
     }
 
-    public <T> T getValue(String key,T value){
-        if(value instanceof String){
+    public void setValue(String key, Object value) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(value);
+        editor.putString(key, json);
+        editor.apply();
+    }
+
+    public <T> T getValue(String key, T value) {
+        if (value instanceof String) {
             return (T) mPreferences.getString(key, (String) value);
         }
-        if(value instanceof Boolean){
+        if (value instanceof Boolean) {
             Boolean aBoolean = mPreferences.getBoolean(key, (Boolean) value);
             return (T) aBoolean;
         }
         return value;
+    }
+
+    public <T> T getValueFromJson(String key, T value) {
+        String json = mPreferences.getString(key, "");
+        Gson gson = new Gson();
+        Object jsonObject = gson.fromJson(json, value.getClass());
+        if (jsonObject == null)
+            return value;
+        return (T) jsonObject;
+    }
+
+    public void clearSetting(){
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
 }

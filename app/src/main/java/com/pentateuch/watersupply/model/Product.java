@@ -24,6 +24,7 @@ public class Product implements Parcelable {
     private int quantity;
     private float price;
     private String type;
+    private String key;
 
     public Product(String name, int id, String desc, int drawable, float price) {
         this.name = name;
@@ -111,7 +112,15 @@ public class Product implements Parcelable {
         return id;
     }
 
-    public String getCostInRs(){
-        return String.format(Locale.ENGLISH,"%.2f Rs",price * quantity);
+    public String getCostInRs() {
+        return String.format(Locale.ENGLISH, "%.2f Rs", price * quantity);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

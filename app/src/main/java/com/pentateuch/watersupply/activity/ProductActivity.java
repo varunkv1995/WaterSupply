@@ -28,6 +28,12 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
     private TextView quantityTextView,totalTextView;
     private BottomSheetBehavior sheetBehavior;
     private LinearLayout bottomLayout;
+    private TextView addressTextView;
+    private User user;
+
+    public ProductActivity(){
+        user = App.getInstance().getUser();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,8 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         totalTextView.setText(product.getCostInRs());
         bottomLayout = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(bottomLayout);
+        addressTextView = findViewById(R.id.tv_product_address);
+        addressTextView.setText(user.getAddress());
     }
 
     public void onIncrease(View view) {
@@ -74,8 +82,6 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
     }
 
     public void addCart(View view) {
-        User user = App.getInstance().getUser();
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("Carts").child(user.getUid()).push().setValue(product).addOnCompleteListener(this);
     }
