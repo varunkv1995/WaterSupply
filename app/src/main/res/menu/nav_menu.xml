@@ -7,7 +7,7 @@
         android:title="@string/cart"
         android:icon="@drawable/ic_action_cart"/>
     <item android:id="@+id/menu_order"
-        android:title="@string/order"
+        android:title="@string/my_order"
         android:icon="@drawable/ic_action_cart"/>
     <item android:id="@+id/menu_profile"
         android:title="@string/my_account"
