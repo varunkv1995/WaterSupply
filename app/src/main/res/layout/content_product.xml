@@ -1,8 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_above="@+id/layout_bottom_product"
-    android:layout_alignParentTop="true"
     android:layout_gravity="top">
 
     <LinearLayout
@@ -21,7 +19,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="200sp"
                 android:layout_margin="5sp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:contentDescription="@string/product_image" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,7 +38,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Quantity :"
+                    android:text="@string/quantity"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -53,7 +52,7 @@
                         android:layout_height="30sp"
                         android:background="@drawable/button_circle_gray"
                         android:onClick="onIncrease"
-                        android:text="+"
+                        android:text="@string/plus"
                         android:textColor="@color/white" />
 
                     <TextView
@@ -70,7 +69,7 @@
                         android:layout_height="30sp"
                         android:background="@drawable/button_circle_gray"
                         android:onClick="onDecrease"
-                        android:text="-"
+                        android:text="@string/minus"
                         android:textColor="@color/white" />
                 </LinearLayout>
 
