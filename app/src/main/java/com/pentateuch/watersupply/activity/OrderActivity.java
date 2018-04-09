@@ -60,6 +60,7 @@ public class OrderActivity extends AppCompatActivity {
                     pnumber.setError("This field can' be empty");
                     return;
                 }
+                
                 if (TextUtils.isEmpty(getEmail)) {
                     emailAddress.setError("This field can' be empty");
                     return;
