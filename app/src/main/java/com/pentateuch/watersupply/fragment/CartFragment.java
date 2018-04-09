@@ -67,6 +67,10 @@ public class CartFragment extends Fragment implements ValueEventListener, CartTo
             carts = FirebaseDatabase.getInstance().getReference().child("Carts").child(user.getUid());
             carts.addValueEventListener(this);
         }
+        else{
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         ItemTouchHelper.SimpleCallback callback = new CartTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
     }
