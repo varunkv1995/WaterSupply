@@ -108,6 +108,7 @@
             android:background="@drawable/ripple_effect"
             android:padding="10dp"
             android:text="Confirm Order"
+            android:onClick="ConfirmOrder"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/black" />
 </RelativeLayout>

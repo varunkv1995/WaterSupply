@@ -1,16 +1,23 @@
 package com.pentateuch.watersupply.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.Product;
 import com.pentateuch.watersupply.model.User;
 
-public class CashOnDelivery extends AppCompatActivity {
+public class CashOnDelivery extends AppCompatActivity implements OnCompleteListener<Void> {
 
     ImageView product_cash_on_delivery;
     TextView quantity, totalTextView, adressTextView, dateTimeTextView;
@@ -43,4 +50,16 @@ public class CashOnDelivery extends AppCompatActivity {
     }
 
 
+    public void ConfirmOrder(View view) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("MyOrder").child(user.getUid()).push().setValue(product).addOnCompleteListener(this);
+
+    }
+
+    @Override
+    public void onComplete(@NonNull Task<Void> task) {
+            if(task.isSuccessful()){
+                Toast.makeText(this, "Order is Confirmed", Toast.LENGTH_SHORT).show();
+            }
+    }
 }

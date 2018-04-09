@@ -65,7 +65,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
-        <activity android:name=".activity.CashOnDelivery"></activity>
+        <activity android:name=".activity.CashOnDelivery" />
+        <activity android:name=".activity.MyOreder"></activity>
     </application>
 
 </manifest>
