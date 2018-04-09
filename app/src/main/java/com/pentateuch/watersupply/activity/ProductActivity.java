@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.Product;
 import com.pentateuch.watersupply.model.User;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -129,6 +131,10 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
                 startActivity(intent);
                 break;
             case R.id.online_payment:
+                Intent intent1=new Intent(ProductActivity.this,OrderActivity.class);
+                intent1.putExtra("product",product);
+                startActivity(intent1);
+
                 //
                 break;
         }

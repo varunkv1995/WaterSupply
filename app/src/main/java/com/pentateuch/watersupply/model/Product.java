@@ -127,7 +127,7 @@ public class Product implements Parcelable {
 
     @Exclude
     public String getTotalCostInRs(){
-        return String.format(Locale.ENGLISH, "%.2f Rs", price * quantity);
+        return String.format(Locale.ENGLISH, "%.2f ", price * quantity);
     }
 
     public String getKey() {
