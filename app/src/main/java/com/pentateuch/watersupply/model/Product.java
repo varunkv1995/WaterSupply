@@ -26,9 +26,10 @@ public class Product implements Parcelable {
     private int quantity;
     private float price;
     private String type;
-    private String data;
+    private String date;
     private String time;
     private String key;
+
 
     public Product(String name, int id, String desc, int drawable, float price) {
         this.name = name;
@@ -59,6 +60,8 @@ public class Product implements Parcelable {
         price = in.readFloat();
         type = in.readString();
         quantity = in.readInt();
+        date = in.readString();
+        time = in.readString();
     }
 
     public Product() {
@@ -98,6 +101,8 @@ public class Product implements Parcelable {
         dest.writeFloat(price);
         dest.writeString(type);
         dest.writeInt(quantity);
+        dest.writeString(date);
+        dest.writeString(time);
     }
 
     public int getQuantity() {
@@ -133,12 +138,12 @@ public class Product implements Parcelable {
         this.key = key;
     }
 
-    public String getData() {
-        return data;
+    public String getDate() {
+        return date;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDate(String data) {
+        this.date = data;
     }
 
     public String getTime() {
