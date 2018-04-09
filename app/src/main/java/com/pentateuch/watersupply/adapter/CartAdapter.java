@@ -81,7 +81,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             Spannable quantityWordSpan = new SpannableString(quantity);
             quantityWordSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 10, quantity.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             quantityTextView.setText(quantityWordSpan);
-            dataTextView.setText(product.getData());
+            dataTextView.setText(product.getDate());
             frontView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
