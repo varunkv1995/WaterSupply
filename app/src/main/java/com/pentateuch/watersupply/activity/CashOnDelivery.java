@@ -52,6 +52,7 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
 
     public void ConfirmOrder(View view) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        product.setStatus("pending");
         reference.child("MyOrder").child(user.getUid()).push().setValue(product).addOnCompleteListener(this);
 
     }
@@ -59,7 +60,7 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
     @Override
     public void onComplete(@NonNull Task<Void> task) {
             if(task.isSuccessful()){
-                Toast.makeText(this, "Order is Confirmed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Order is Confirmed", Toast.LENGTH_LONG).show();
             }
     }
 }

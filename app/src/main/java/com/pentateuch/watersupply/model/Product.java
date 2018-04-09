@@ -29,6 +29,7 @@ public class Product implements Parcelable {
     private String date;
     private String time;
     private String key;
+    private String status;
 
 
     public Product(String name, int id, String desc, int drawable, float price) {
@@ -65,6 +66,18 @@ public class Product implements Parcelable {
     }
 
     public Product() {
+    }
+
+    public Product(String name, int id, int drawable, int quantity, float price, String type, String date, String time, String status) {
+        this.name = name;
+        this.id = id;
+        this.drawable = drawable;
+        this.quantity = quantity;
+        this.price = price;
+        this.type = type;
+        this.date = date;
+        this.time = time;
+        this.status = status;
     }
 
     public String getName() {
@@ -152,5 +165,13 @@ public class Product implements Parcelable {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

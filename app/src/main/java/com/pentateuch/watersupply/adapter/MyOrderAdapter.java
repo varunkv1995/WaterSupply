@@ -50,7 +50,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
 
     public class MyOrderViewHolder extends RecyclerView.ViewHolder {
         private ImageView productImageView;
-        private TextView priceTextView, quantityTextView, dataTextView;
+        private TextView priceTextView, quantityTextView, dataTextView,TimeTextViwe,statusTextViwe;
 
 
         MyOrderViewHolder(View itemView) {
@@ -59,6 +59,8 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
             productImageView = itemView.findViewById(R.id.image_myorder);
             quantityTextView = itemView.findViewById(R.id.tv_myorder_quantity);
             dataTextView = itemView.findViewById(R.id.tv_myorder_date);
+            TimeTextViwe=itemView.findViewById(R.id.tv_myorder_time);
+            statusTextViwe=itemView.findViewById(R.id.tv_myorder_status);
         }
 
         public void bind(Product product) {
@@ -67,11 +69,26 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
             Spannable princeSpannable = new SpannableString(price);
             princeSpannable.setSpan(new ForegroundColorSpan(Color.BLUE), 7, price.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             priceTextView.setText(princeSpannable);
+
             String quantity = String.format(Locale.ENGLISH, "Quantity :%d", product.getQuantity());
             Spannable quantityWordSpan = new SpannableString(quantity);
             quantityWordSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 10, quantity.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             quantityTextView.setText(quantityWordSpan);
-            dataTextView.setText(product.getDate());
+
+            String Date = String.format(Locale.ENGLISH, "Date :%s", product.getDate());
+            Spannable DateWordSpan = new SpannableString(Date);
+            DateWordSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 6, Date.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            dataTextView.setText(DateWordSpan);
+
+            String Time = String.format(Locale.ENGLISH, "Time :%s", product.getTime());
+            Spannable TimeWordSpan = new SpannableString(Time);
+            TimeWordSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 6, Time.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            TimeTextViwe.setText(TimeWordSpan);
+
+            String Status = String.format(Locale.ENGLISH, "Status:%s", product.getStatus());
+            Spannable StatusWordSpan = new SpannableString(Status);
+            StatusWordSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 6, Status.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            statusTextViwe.setText(StatusWordSpan);
         }
     }
 }
