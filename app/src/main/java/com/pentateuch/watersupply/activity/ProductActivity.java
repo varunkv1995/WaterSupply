@@ -147,7 +147,9 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
                 startActivity(intent);
                 break;
             case R.id.online_payment:
-                //
+                intent = new Intent(ProductActivity.this, OrderActivity.class);
+                intent.putExtra("product", product);
+                startActivity(intent);
                 break;
         }
     }

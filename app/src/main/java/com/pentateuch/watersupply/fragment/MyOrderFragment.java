@@ -27,7 +27,7 @@ import java.util.List;
  * Created by varu on 08-04-2018.
  */
 
-public class MyOrederFragment extends Fragment implements ValueEventListener {
+public class MyOrderFragment extends Fragment implements ValueEventListener {
 
 
     private View rootView;
@@ -38,7 +38,7 @@ public class MyOrederFragment extends Fragment implements ValueEventListener {
     private DatabaseReference myorder;
     private boolean loaded;
 
-    public MyOrederFragment() {
+    public MyOrderFragment() {
         products = new ArrayList<>();
     }
 
@@ -46,7 +46,7 @@ public class MyOrederFragment extends Fragment implements ValueEventListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_myoreder, container, false);
+        rootView = inflater.inflate(R.layout.fragment_myorder, container, false);
         adapter = new MyOrderAdapter(rootView.getContext(), products, this);
         return rootView;
     }

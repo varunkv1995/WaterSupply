@@ -23,7 +23,7 @@ import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.fragment.CartFragment;
 import com.pentateuch.watersupply.fragment.HomeFragment;
-import com.pentateuch.watersupply.fragment.MyOrederFragment;
+import com.pentateuch.watersupply.fragment.MyOrderFragment;
 import com.pentateuch.watersupply.fragment.ProfileFragment;
 import com.pentateuch.watersupply.model.User;
 
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return new ProfileFragment();
             case R.id.menu_order:
                 setTitle("MyOrder");
-                return new MyOrederFragment();
+                return new MyOrderFragment();
         }
         return null;
     }
