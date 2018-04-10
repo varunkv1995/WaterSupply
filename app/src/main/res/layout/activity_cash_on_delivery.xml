@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10sp"
-                    android:text="Date and Time :"
+                    android:text="Date :"
                     />
                 <TextView
                     android:id="@+id/date_and_time"
@@ -77,6 +77,26 @@
                     android:layout_marginStart="10sp"
                     />
             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10sp"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:text="Time :"
+                />
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                />
+        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,7 +125,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_gravity="center"
-            android:background="@drawable/ripple_effect"
+            android:background="@drawable/ripple_orange"
             android:padding="10dp"
             android:text="Confirm Order"
             android:onClick="ConfirmOrder"

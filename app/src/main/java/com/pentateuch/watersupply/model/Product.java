@@ -31,7 +31,6 @@ public class Product implements Parcelable {
     private String key;
     private String status;
 
-
     public Product(String name, int id, String desc, int drawable, float price) {
         this.name = name;
         this.id = id;

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
@@ -16,72 +14,87 @@
         android:layout_height="wrap_content">
 
         <TableRow>
+
             <TextView
                 android:layout_width="wrap_content"
+                android:textColor="@color/black"
                 android:layout_height="wrap_content"
-                android:text="First Name"/>
-            <EditText
+                android:layout_marginTop="10sp"
+                android:text="First Name" />
+
+            <TextView
                 android:id="@+id/f_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginLeft="5dp"
-                android:paddingLeft="5dp"
-               android:hint="Enter Your Name"
-                android:inputType="text"/>
+                android:layout_marginTop="10sp"
+                android:layout_weight="1"
+                android:inputType="text"
+                android:paddingLeft="5dp" />
         </TableRow>
 
 
         <TableRow>
+
             <TextView
                 android:layout_width="wrap_content"
+                android:textColor="@color/black"
                 android:layout_height="wrap_content"
-                android:text="Phone Number"/>
-            <EditText
+                android:layout_marginTop="10sp"
+                android:text="Phone Number" />
+
+            <TextView
                 android:id="@+id/p_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginLeft="5dp"
-                android:paddingLeft="5dp"
-                android:hint="Enter Your Number"
-                android:inputType="phone"/>
+                android:layout_marginTop="10sp"
+                android:layout_weight="1"
+                android:inputType="phone"
+
+                android:paddingLeft="5dp" />
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:layout_width="wrap_content"
+                android:textColor="@color/black"
                 android:layout_height="wrap_content"
-                android:text="Email"/>
-            <EditText
+                android:layout_marginTop="10sp"
+                android:text="Email" />
+
+            <TextView
                 android:id="@+id/email_Address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginLeft="5dip"
-                android:paddingLeft="5dp"
-                android:hint="Registered E-mail"
-                android:inputType="textEmailAddress"/>
+                android:layout_marginTop="10sp"
+                android:layout_weight="1"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="5dp" />
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pay Amount"/>
+                android:textColor="@color/black"
+                android:layout_marginTop="10sp"
+                android:text="Pay Amount" />
 
             <TextView
-
+                android:id="@+id/tv_total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="10sp"
                 android:layout_weight="1"
-                android:textSize="20dp"
                 android:inputType="number"
                 android:paddingLeft="5dp"
-                android:id="@+id/tv_total_price"/>
-          <!--  android:id="@+id/recharge_Amt"-->
-
+                android:textSize="20dp" />
+            <!--  android:id="@+id/recharge_Amt"-->
 
 
         </TableRow>
@@ -91,12 +104,13 @@
     <Button
         android:id="@+id/Paynow"
         android:layout_width="100dp"
+
         android:layout_height="45dp"
-        android:text="Pay Now"
-        android:textColor="@android:color/white"
-        android:background="@color/colorPrimary"
         android:layout_below="@+id/formLayout"
-        android:layout_marginTop="20dip"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dip"
+        android:background="@color/colorPrimary"
+        android:text="Pay Now"
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>

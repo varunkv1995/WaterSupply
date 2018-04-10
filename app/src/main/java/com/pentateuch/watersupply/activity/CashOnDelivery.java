@@ -1,5 +1,6 @@
 package com.pentateuch.watersupply.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +21,7 @@ import com.pentateuch.watersupply.model.User;
 public class CashOnDelivery extends AppCompatActivity implements OnCompleteListener<Void> {
 
     ImageView product_cash_on_delivery;
-    TextView quantity, totalTextView, adressTextView, dateTimeTextView;
+    TextView quantity, totalTextView, adressTextView, dateTimeTextView,timeTextView;
     private Product product;
     private User user;
 
@@ -37,6 +38,8 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
         user = App.getInstance().getUser();
         quantity = findViewById(R.id.tv_quantity);
         product_cash_on_delivery = findViewById(R.id.image_product_view_cash);
+        timeTextView=findViewById(R.id.time);
+        timeTextView.setText(product.getTime());
         product_cash_on_delivery.setImageResource(product.getDrawable());
         adressTextView = findViewById(R.id.tv_adress);
         quantity = findViewById(R.id.tv_quantity);
@@ -44,7 +47,6 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
         totalTextView = findViewById(R.id.tv_total_amount);
         totalTextView.setText(product.getTotalCostInRs());
         adressTextView.setText(this.user.getAddress());
-        dateTimeTextView.setText(product.getTime());
         dateTimeTextView.append(product.getDate());
 
     }
@@ -61,6 +63,10 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
     public void onComplete(@NonNull Task<Void> task) {
             if(task.isSuccessful()){
                 Toast.makeText(this, "Order is Confirmed", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
     }
 }

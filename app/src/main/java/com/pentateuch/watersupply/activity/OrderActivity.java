@@ -9,12 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.Product;
+import com.pentateuch.watersupply.model.User;
 
 public class OrderActivity extends AppCompatActivity {
-
-    EditText fName, pNumber, emailAddress;
+ User user;
+    TextView fName, pNumber, emailAddress;
     private Product product;
 
 
@@ -35,39 +37,18 @@ public class OrderActivity extends AppCompatActivity {
         TextView totalTextView = findViewById(R.id.tv_total_price);
         totalTextView.setText(product.getTotalCostInRs());
         Button paynowButton = findViewById(R.id.Paynow);
-
+        user = App.getInstance().getUser();
+        fName.setText(this.user.getName());
+        pNumber.setText(this.user.getNumber());
+        emailAddress.setText(this.user.getEmail());
         paynowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String getFname = fName.getText().toString().trim();
-                String getPhone = pNumber.getText().toString().trim();
-                String getEmail = emailAddress.getText().toString().trim();
-                if (TextUtils.isEmpty(getFname)) {
-                    fName.setError("This field can' be empty");
-                    return;
-                }
-                if (TextUtils.isEmpty(getPhone)) {
-                    pNumber.setError("This field can' be empty");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(getEmail)) {
-                    emailAddress.setError("This field can' be empty");
-                    return;
-                }
-                if (getPhone.length() < 10) {
-                    pNumber.setError("numbers must be min 10 digits");
-                    return;
-                }
-                if (!getEmail.matches("^[a-zA-Z0-9.]+@[a-zA-Z]+.(com|in)")) {
-                    emailAddress.setError("Invalid Email");
-                    return;
-                }
                 Intent intent = new Intent(getApplicationContext(), PayMentGateWay.class);
-                intent.putExtra("FIRST_NAME", getFname);
-                intent.putExtra("PHONE_NUMBER", getPhone);
-                intent.putExtra("EMAIL_ADDRESS", getEmail);
+                intent.putExtra("FIRST_NAME", user.getName().trim());
+                intent.putExtra("PHONE_NUMBER", user.getNumber().trim());
+                intent.putExtra("EMAIL_ADDRESS", user.getEmail().trim());
                 intent.putExtra("TEXT_PRICE", String.valueOf(product.getPrice() * product.getQuantity()));
                 startActivity(intent);
 
