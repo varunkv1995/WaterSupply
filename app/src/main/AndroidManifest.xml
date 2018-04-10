@@ -23,8 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.MainActivity"
+        <activity android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,8 +64,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
-        <activity android:name=".activity.CashOnDelivery" />
-        <activity android:name=".activity.MyOreder"></activity>
+        <activity android:name=".activity.CashOnDelivery"></activity>
+        <activity android:name=".activity.OrderActivity"></activity>
+        <activity android:name=".activity.PayMentGateWay"/>
     </application>
 
 </manifest>

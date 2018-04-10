@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "105174210580-ho783hnlcrm2uf7muvfp8lvevq237om2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pentateuch.watersupply",
+            "certificate_hash": "059cca2a47cdb558bbf3b02eac5194bdc99b4573"
+          }
+        },
+        {
           "client_id": "105174210580-t8jruh3db0grplmjq9lko0098d9ekdjq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
