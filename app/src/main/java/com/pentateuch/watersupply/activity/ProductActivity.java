@@ -5,12 +5,13 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
@@ -32,17 +33,17 @@ import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.Product;
 import com.pentateuch.watersupply.model.User;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 public class ProductActivity extends AppCompatActivity implements OnCompleteListener<Void> {
     private Product product;
-    private RadioButton cashOndelivery, onlinepayment;
+    private RadioButton cashOndelivery,onlinepayment;
     private RadioGroup payments;
-    private TextView quantityTextView, totalTextView, dateText, timeTextView;
+    private TextView quantityTextView, totalTextView,dateText, timeTextView;
     private BottomSheetBehavior sheetBehavior;
     private User user;
-    private LinearLayout bottomLayout;
 
     public ProductActivity() {
         user = App.getInstance().getUser();
@@ -57,12 +58,11 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         if (extras != null) {
             product = extras.getParcelable("product");
             cartVisible = extras.getBoolean("enableCart", true);
-        }
-        cashOndelivery = findViewById(R.id.cash_on_delivery);
-        onlinepayment = findViewById(R.id.online_payment);
-        payments = findViewById(R.id.payments);
-        dateText = findViewById(R.id.tv_date);
-        timeTextView = findViewById(R.id.tv_time);
+        }  cashOndelivery=findViewById(R.id.cash_on_delivery);
+        onlinepayment =findViewById(R.id.online_payment);
+        payments=findViewById(R.id.payments);
+        dateText=findViewById(R.id.tv_date);
+        timeTextView =findViewById(R.id.tv_time);
         ImageView productImageView = findViewById(R.id.image_product_view);
         productImageView.setImageResource(product.getDrawable());
         quantityTextView = findViewById(R.id.tv_product_quantity);
@@ -79,12 +79,10 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         TextView addressTextView = findViewById(R.id.tv_product_address);
         addressTextView.setText(user.getAddress());
         Button cartButton = findViewById(R.id.btn_product_cart);
-        bottomLayout = findViewById(R.id.layout_bottom_product);
         if (!cartVisible)
             cartButton.setVisibility(View.GONE);
 
     }
-
     public void onIncrease(View view) {
         product.increaseQuantity();
         quantityTextView.setText(String.valueOf(product.getQuantity()));
@@ -98,7 +96,6 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
             totalTextView.setText(product.getTotalCostInRs());
         }
     }
-
     public void onBuy(View view) {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -106,26 +103,10 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
     }
-
     public void addCart(View view) {
-        if (user != null) {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            reference.child("Carts").child(user.getUid()).push().setValue(product).addOnCompleteListener(this);
-        } else {
-            Snackbar snackbar = Snackbar.make(bottomLayout, "Please Login Again", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction("Login", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ProductActivity.this, LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            });
-            snackbar.show();
-        }
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("Carts").child(user.getUid()).push().setValue(product).addOnCompleteListener(this);
     }
-
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if (task.isSuccessful()) {
@@ -134,19 +115,26 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
     }
 
 
+
     public void orderNow(View view) {
-        if (product.getTime() == null && product.getDate() == null) {
-            Toast.makeText(getApplicationContext(), "please select time", Toast.LENGTH_LONG).show();
+        if(product.getTime() == null && product.getDate() == null)
+        {
+            Toast.makeText(getApplicationContext(),"please select time",Toast.LENGTH_LONG).show();
             return;
         }
         int checkedRadioButtonId = payments.getCheckedRadioButtonId();
-        switch (checkedRadioButtonId) {
+        switch (checkedRadioButtonId)
+        {
             case R.id.cash_on_delivery:
-                Intent intent = new Intent(ProductActivity.this, CashOnDelivery.class);
-                intent.putExtra("product", product);
+                Intent intent = new Intent(ProductActivity.this,CashOnDelivery.class);
+                intent.putExtra("product",product);
                 startActivity(intent);
                 break;
             case R.id.online_payment:
+                Intent intent1=new Intent(ProductActivity.this,OrderActivity.class);
+                intent1.putExtra("product",product);
+                startActivity(intent1);
+
                 //
                 break;
         }
@@ -163,10 +151,9 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
                 product.setDate(dateText.getText().toString());
 
             }
-        }, calendar.YEAR, calendar.MONTH, calendar.DAY_OF_MONTH);
+        },calendar.YEAR,calendar.MONTH,calendar.DAY_OF_MONTH);
         dialog.show();
     }
-
     public void onEditTime(View view) {
 
         Calendar mCurrentTime = Calendar.getInstance();
@@ -176,15 +163,13 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         mTimePicker = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                timeTextView.setText("" + selectedHour + ":" + selectedMinute);
+                timeTextView.setText( ""  + selectedHour + ":" + selectedMinute);
                 product.setTime(timeTextView.getText().toString());
                 timeTextView.setVisibility(View.VISIBLE);
             }
-        }, hour, minute, true);//24 hrs true
+        }, hour, minute,true);//24 hrs true
         mTimePicker.setTitle("Select Time");
         mTimePicker.show();
 
     }
-
-
 }

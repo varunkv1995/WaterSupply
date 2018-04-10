@@ -26,7 +26,7 @@ public class LocationHelper implements LocationListener, AsyncTaskListener<Doubl
     private LocationUpdateListener listener;
     private LocationManager locationManager;
 
-
+    
     public LocationHelper(Context context, LocationUpdateListener listener) {
         this.context = context;
         this.listener = listener;
