@@ -23,6 +23,7 @@ import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.fragment.CartFragment;
 import com.pentateuch.watersupply.fragment.HomeFragment;
+import com.pentateuch.watersupply.fragment.MyOrderFragment;
 import com.pentateuch.watersupply.fragment.ProfileFragment;
 import com.pentateuch.watersupply.model.User;
 
@@ -112,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.menu_logout:
                 logout();
                 break;
+            case R.id.menu_order:
+                loadFragment(itemId);
+                break;
         }
 
         drawer.closeDrawer(Gravity.START);
@@ -146,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.menu_profile:
                 setTitle("Profile");
                 return new ProfileFragment();
+            case R.id.menu_order:
+                setTitle("MyOrder");
+                return new MyOrderFragment();
         }
         return null;
     }

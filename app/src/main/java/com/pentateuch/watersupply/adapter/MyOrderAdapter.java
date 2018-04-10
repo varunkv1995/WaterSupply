@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pentateuch.watersupply.R;
-import com.pentateuch.watersupply.fragment.MyOrederFragment;
+import com.pentateuch.watersupply.fragment.MyOrderFragment;
 import com.pentateuch.watersupply.model.Product;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
     private List<Product> products;
     private LayoutInflater inflater;
 
-    public MyOrderAdapter(Context context, List<Product> products, MyOrederFragment myOrederFragment) {
+    public MyOrderAdapter(Context context, List<Product> products, MyOrderFragment myOrederFragment) {
         this.products = products;
         inflater = LayoutInflater.from(context);
     }

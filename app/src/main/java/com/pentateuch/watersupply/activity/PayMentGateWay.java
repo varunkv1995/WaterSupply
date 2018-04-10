@@ -70,8 +70,6 @@ public class PayMentGateWay extends Activity {
         super.onCreate(savedInstanceState);
 
         progressDialog = new ProgressDialog(activity);
-
-
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         webView = new WebView(this);
         setContentView(webView);
