@@ -113,7 +113,7 @@ public class CartFragment extends Fragment implements ValueEventListener, CartTo
     public void onClick(int position) {
         Product product = products.get(position);
         Intent intent = new Intent(getActivity(), ProductActivity.class);
-        intent.putExtra("product",product);
+        intent.putExtra("product",product.getItem());
         intent.putExtra("enableCart",false);
         startActivity(intent);
     }

@@ -5,7 +5,7 @@
     android:background="@color/dimWhite"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="10sp"
+    android:padding="8sp"
     android:columnWidth="140dp"
     android:gravity="center"
     android:horizontalSpacing="10dp"

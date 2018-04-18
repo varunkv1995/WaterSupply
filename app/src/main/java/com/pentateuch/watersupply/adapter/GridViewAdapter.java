@@ -9,9 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pentateuch.watersupply.R;
-import com.pentateuch.watersupply.model.Product;
+import com.pentateuch.watersupply.model.ProductItem;
+import com.tech.imageloader.core.ImageFetcher;
+import com.tech.imageloader.view.ImageViewer;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by varu on 04-04-2018.
@@ -19,12 +22,14 @@ import java.util.List;
 
 public class GridViewAdapter extends BaseAdapter {
 
-    private List<Product> products;
+    private List<ProductItem> products;
     private LayoutInflater layoutInflater;
+    private ImageFetcher fetcher;
 
-    public GridViewAdapter(Context context,List<Product> products) {
+    public GridViewAdapter(Context context, List<ProductItem> products) {
         this.products = products;
-        layoutInflater=LayoutInflater.from(context);
+        layoutInflater = LayoutInflater.from(context);
+        fetcher = new ImageFetcher(context);
     }
 
     @Override
@@ -33,7 +38,7 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Product getItem(int i) {
+    public ProductItem getItem(int i) {
         return products.get(i);
     }
 
@@ -44,15 +49,15 @@ public class GridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view==null){
-            view =layoutInflater.inflate(R.layout.list_item_product,viewGroup,false);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.list_item_product, viewGroup, false);
 
         }
-        Product item = getItem(i);
-        ImageView imageView = view.findViewById(R.id.image_product);
+        ProductItem item = getItem(i);
+        ImageView imageViewer = view.findViewById(R.id.image_product);
         TextView textView = view.findViewById(R.id.text_product);
-        imageView.setImageResource(item.getDrawable());
-        textView.setText(String.format("Price\n %.2f/%s",item.getPrice(),item.getType()));
+        fetcher.from(item.getImageUrl()).into(imageViewer);
+        textView.setText(String.format(Locale.ENGLISH, "Price\n%.2f/%s", item.getPrice(), item.getType()));
         return view;
     }
 }

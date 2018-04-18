@@ -1,12 +1,16 @@
 package com.pentateuch.watersupply.activity;
 
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -16,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,9 +32,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.User;
+import com.pentateuch.watersupply.utils.NotifyConfig;
 
 /**
  * A login screen that offers login via email/password.
@@ -183,14 +190,19 @@ public class LoginActivity extends AppCompatActivity implements ValueEventListen
     public void onDataChange(DataSnapshot dataSnapshot) {
         showProgress(false);
         final User value = dataSnapshot.getValue(User.class);
+        startBroadCast();
         if (value != null) {
             value.setUid(currentUser.getUid());
-            App.getInstance().setValue("current",value);
+            App.getInstance().setValue("current", value);
             App.getInstance().setUser(value);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
+    }
+
+    private void startBroadCast() {
+
     }
 
     @Override

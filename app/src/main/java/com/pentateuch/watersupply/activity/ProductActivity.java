@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -30,14 +29,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.Product;
+import com.pentateuch.watersupply.model.ProductItem;
 import com.pentateuch.watersupply.model.User;
+import com.pentateuch.watersupply.utils.DateTimeUtils;
+import com.tech.imageloader.core.ImageFetcher;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class ProductActivity extends AppCompatActivity implements OnCompleteListener<Void> {
     private Product product;
-    private RadioButton cashOndelivery, onlinepayment;
     private RadioGroup payments;
     private TextView quantityTextView, totalTextView, dateText, timeTextView;
     private BottomSheetBehavior sheetBehavior;
@@ -55,16 +57,15 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         Bundle extras = getIntent().getExtras();
         boolean cartVisible = false;
         if (extras != null) {
-            product = extras.getParcelable("product");
+            ProductItem item = extras.getParcelable("product");
+            product = new Product(item);
             cartVisible = extras.getBoolean("enableCart", true);
         }
-        cashOndelivery = findViewById(R.id.cash_on_delivery);
-        onlinepayment = findViewById(R.id.online_payment);
         payments = findViewById(R.id.payments);
         dateText = findViewById(R.id.tv_date);
         timeTextView = findViewById(R.id.tv_time);
         ImageView productImageView = findViewById(R.id.image_product_view);
-        productImageView.setImageResource(product.getDrawable());
+        ImageFetcher.with(this).from(product.getImageUrl()).into(productImageView);
         quantityTextView = findViewById(R.id.tv_product_quantity);
         quantityTextView.setText(String.valueOf(product.getQuantity()));
         TextView priceTextView = findViewById(R.id.tv_product_price);
@@ -74,12 +75,11 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         priceTextView.setText(wordSpan);
         totalTextView = findViewById(R.id.tv_total_cost);
         totalTextView.setText(product.getTotalCostInRs());
-        LinearLayout bottomLayout = findViewById(R.id.bottom_sheet);
+        bottomLayout = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(bottomLayout);
         TextView addressTextView = findViewById(R.id.tv_product_address);
         addressTextView.setText(user.getAddress());
         Button cartButton = findViewById(R.id.btn_product_cart);
-        bottomLayout = findViewById(R.id.layout_bottom_product);
         if (!cartVisible)
             cartButton.setVisibility(View.GONE);
 
@@ -93,7 +93,7 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
 
     public void onDecrease(View view) {
         if (product.getQuantity() > 1) {
-            product.decreamentQuantity();
+            product.decreaseQuantity();
             quantityTextView.setText(String.valueOf(product.getQuantity()));
             totalTextView.setText(product.getTotalCostInRs());
         }
@@ -105,6 +105,16 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         } else {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DateTimeUtils dateUtils = new DateTimeUtils();
+        product.setDate(dateUtils.getCurrentDate());
+        product.setTime(dateUtils.getCurrentTime(30));
+        timeTextView.setText(product.getTime());
+        dateText.setText(product.getDate());
     }
 
     public void addCart(View view) {
@@ -155,30 +165,29 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
     }
 
     public void onEditDate(View view) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+5:30"));
         DatePickerDialog dialog = new DatePickerDialog(view.getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                dateText.setText(year + "/" + month + "/" + dayOfMonth);
-                dateText.setVisibility(View.VISIBLE);
+                dateText.setText(String.format(Locale.ENGLISH, "%d/%d/%d", year, month, dayOfMonth));
                 product.setDate(dateText.getText().toString());
 
             }
-        }, calendar.YEAR, calendar.MONTH, calendar.DAY_OF_MONTH);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         dialog.show();
     }
 
     public void onEditTime(View view) {
-
-        Calendar mCurrentTime = Calendar.getInstance();
+        final Calendar mCurrentTime = Calendar.getInstance();
+        mCurrentTime.add(Calendar.MINUTE, 30);
         int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mCurrentTime.get(Calendar.MINUTE);
         TimePickerDialog mTimePicker;
         mTimePicker = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                timeTextView.setText("" + selectedHour + ":" + selectedMinute);
+                timeTextView.setText(String.format(Locale.ENGLISH, "%d:%d", selectedHour, selectedMinute));
                 product.setTime(timeTextView.getText().toString());
                 timeTextView.setVisibility(View.VISIBLE);
             }

@@ -52,6 +52,7 @@ public class LocationHelper implements LocationListener, AsyncTaskListener<Doubl
                 }
             });
             dialog.show("Enable Location Setting", "Ok");
+            listener.onCancel();
         }
     }
 

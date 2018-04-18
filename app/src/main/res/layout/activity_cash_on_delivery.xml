@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/root_cod"
     tools:context="com.pentateuch.watersupply.activity.CashOnDelivery">
     <ScrollView
         android:layout_width="match_parent"
@@ -20,7 +21,8 @@
                 android:layout_width="200sp"
                 android:layout_height="200sp"
                 android:layout_gravity="center"
-                android:layout_margin="5sp" />
+                android:layout_margin="5sp"
+                android:contentDescription="@string/product" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,8 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10sp"
                     android:layout_marginStart="10sp"
-                    android:text="Quantity :"
-
+                    android:text="@string/quantity"
                     />
 
                 <TextView
@@ -107,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10sp"
                     android:layout_marginStart="10sp"
-                    android:text="Adress :"
+                    android:text="@string/address"
                     />
                 <TextView
                     android:id="@+id/tv_adress"
@@ -127,7 +128,7 @@
             android:layout_gravity="center"
             android:background="@drawable/ripple_orange"
             android:padding="10dp"
-            android:text="Confirm Order"
+            android:text="@string/confirm_order"
             android:onClick="ConfirmOrder"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/black" />

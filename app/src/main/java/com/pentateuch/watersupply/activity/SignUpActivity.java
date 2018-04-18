@@ -18,8 +18,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.User;
@@ -118,16 +120,29 @@ public class SignUpActivity extends AppCompatActivity implements OnCompleteListe
     @Override
     public void onComplete(@NonNull Task<AuthResult> task) {
         dialog.dismiss();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(user.getName())
+                .build();
+
         if (task.isSuccessful()) {
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String token = FirebaseInstanceId.getInstance().getToken();
+            user.setToken(token);
             if (currentUser != null)
-                databaseReference.child(currentUser.getUid()).setValue(user);
-            App.getInstance().setUser(user);
-            App.getInstance().setValue("current",user);
-            Intent intent = new Intent(SignUpActivity.this, PhoneAuthActivity.class);
-            intent.putExtra("phone", user.getNumber());
-            startActivity(intent);
-            finish();
+                currentUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        databaseReference.child(currentUser.getUid()).setValue(user);
+                        user.setUid(currentUser.getUid());
+                        App.getInstance().setUser(user);
+                        App.getInstance().setValue("current", user);
+                        Intent intent = new Intent(SignUpActivity.this, PhoneAuthActivity.class);
+                        intent.putExtra("phone", user.getNumber());
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
         } else {
             try {
                 throw task.getException();

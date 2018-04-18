@@ -6,17 +6,9 @@ package com.pentateuch.watersupply.model;
 
 public class User {
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
     private String uid;
+    private String token;
     private String name, number, email, address, pinCode;
-
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
-
     private boolean verified;
 
     public User(String uid, String name, String number, String email) {
@@ -25,6 +17,7 @@ public class User {
         this.number = number;
         this.email = email;
     }
+
     public User() {
 
     }
@@ -54,6 +47,15 @@ public class User {
         this.verified = verified;
     }
 
+    public User(String name, String number, String email, String address, String pinCode, String token, boolean verified) {
+        this.name = name;
+        this.number = number;
+        this.email = email;
+        this.address = address;
+        this.pinCode = pinCode;
+        this.token = token;
+        this.verified = verified;
+    }
 
     public String getName() {
         return name;
@@ -99,8 +101,24 @@ public class User {
         return verified;
     }
 
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
     public String getUid() {
         return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
 

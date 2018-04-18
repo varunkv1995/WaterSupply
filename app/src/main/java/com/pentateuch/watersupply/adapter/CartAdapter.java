@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.Product;
 import com.pentateuch.watersupply.utils.OnItemClickListener;
+import com.tech.imageloader.core.ImageFetcher;
 
 import java.util.List;
 import java.util.Locale;
@@ -27,11 +28,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private List<Product> products;
     private LayoutInflater inflater;
     private OnItemClickListener listener;
+    private ImageFetcher fetcher;
 
     public CartAdapter(Context context, List<Product> products, OnItemClickListener listener) {
         this.products = products;
         inflater = LayoutInflater.from(context);
         this.listener = listener;
+        fetcher = new ImageFetcher(context);
     }
 
     @Override
@@ -72,7 +75,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
 
         void bind(Product product, final int position) {
-            productImageView.setImageResource(product.getDrawable());
+            fetcher.from(product.getImageUrl()).into(productImageView);
             String price = String.format(Locale.ENGLISH, "Price :%s", product.getCostInRs());
             Spannable princeSpannable = new SpannableString(price);
             princeSpannable.setSpan(new ForegroundColorSpan(Color.BLUE), 7, price.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -3,10 +3,8 @@ package com.pentateuch.watersupply.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.pentateuch.watersupply.App;
@@ -45,11 +43,12 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(), PayMentGateWay.class);
+                Intent intent = new Intent(getApplicationContext(), PaymentGateway.class);
                 intent.putExtra("FIRST_NAME", user.getName().trim());
                 intent.putExtra("PHONE_NUMBER", user.getNumber().trim());
                 intent.putExtra("EMAIL_ADDRESS", user.getEmail().trim());
                 intent.putExtra("TEXT_PRICE", String.valueOf(product.getPrice() * product.getQuantity()));
+                intent.putExtra("product",product);
                 startActivity(intent);
 
             }

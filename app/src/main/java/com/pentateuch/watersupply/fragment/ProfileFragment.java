@@ -24,15 +24,18 @@ import com.pentateuch.watersupply.model.User;
 import com.pentateuch.watersupply.utils.AlertDialogMaker;
 import com.pentateuch.watersupply.utils.LocationHelper;
 import com.pentateuch.watersupply.utils.LocationUpdateListener;
+import com.pentateuch.watersupply.utils.ProgressDialog;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment implements View.OnClickListener, OnCompleteListener<Void>,LocationUpdateListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener, OnCompleteListener<Void>, LocationUpdateListener {
     private View rootView;
-    private TextView addressTextView,pinTextView,phoneTextView;
+    private TextView addressTextView, pinTextView, phoneTextView;
     private User user;
     private boolean updated;
+    private ProgressDialog dialog;
+    private boolean isVerified;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -69,13 +72,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, O
         accountButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
         locationButton.setOnClickListener(this);
+        dialog = new ProgressDialog(rootView.getContext());
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_address_change:
-                AlertDialogMaker.getEditTextAlertDialog(rootView.getContext(), "Address",addressTextView.getText().toString(), InputType.TYPE_TEXT_FLAG_MULTI_LINE, new AlertDialogMaker.AlertClickListener() {
+                AlertDialogMaker.getEditTextAlertDialog(rootView.getContext(), "Address", addressTextView.getText().toString(), InputType.TYPE_TEXT_FLAG_MULTI_LINE, new AlertDialogMaker.AlertClickListener() {
                     @Override
                     public void onClick(String text) {
                         addressTextView.setText(text);
@@ -84,7 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, O
                 });
                 break;
             case R.id.btn_pin_change:
-                AlertDialogMaker.getEditTextAlertDialog(rootView.getContext(), "PinCode",pinTextView.getText().toString(), InputType.TYPE_TEXT_FLAG_MULTI_LINE, new AlertDialogMaker.AlertClickListener() {
+                AlertDialogMaker.getEditTextAlertDialog(rootView.getContext(), "PinCode", pinTextView.getText().toString(), InputType.TYPE_TEXT_FLAG_MULTI_LINE, new AlertDialogMaker.AlertClickListener() {
                     @Override
                     public void onClick(String text) {
                         pinTextView.setText(text);
@@ -93,7 +97,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, O
                 });
                 break;
             case R.id.btn_phone_change:
-                AlertDialogMaker.getEditTextAlertDialog(rootView.getContext(), "Phone",user.getNumber(), InputType.TYPE_TEXT_FLAG_MULTI_LINE, new AlertDialogMaker.AlertClickListener() {
+                AlertDialogMaker.getEditTextAlertDialog(rootView.getContext(), "Phone", user.getNumber(), InputType.TYPE_TEXT_FLAG_MULTI_LINE, new AlertDialogMaker.AlertClickListener() {
                     @Override
                     public void onClick(String text) {
                         phoneTextView.setText(text);
@@ -109,44 +113,57 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, O
                 updateSettings();
                 break;
             case R.id.btn_location_profile:
-                LocationHelper helper = new LocationHelper(getActivity(),this);
+                dialog.showProgressAt(rootView);
+                LocationHelper helper = new LocationHelper(getActivity(), this);
                 helper.findCurrentLocation();
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        user.setVerified(App.getInstance().getValue("isPhoneVerified",false));
+    }
+
     private void updateSettings() {
-        if(updated) {
+        dialog.showProgressAt(rootView);
+        if (updated) {
             String address = addressTextView.getText().toString();
             String pin = pinTextView.getText().toString();
             String phone = phoneTextView.getText().toString();
-
-
             if (!phone.equals(user.getNumber()))
                 user.setVerified(false);
             user.setPinCode(pin);
             user.setNumber(phone);
             user.setAddress(address);
-            User updatedUser = new User(user.getName(), phone, user.getEmail(), address, pin,user.isVerified());
+            User updatedUser = new User(user.getName(), phone, user.getEmail(), address, pin, user.getToken(), user.isVerified());
             FirebaseDatabase.getInstance().getReference().child("RegisteredUsers").child(user.getUid()).setValue(updatedUser).addOnCompleteListener(this);
-        }
-        else {
-            Toast.makeText(rootView.getContext(),"Nothing to Update",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(rootView.getContext(), "Nothing to Update", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
         }
     }
 
     @Override
     public void onComplete(@NonNull Task<Void> task) {
-        Toast.makeText(rootView.getContext(),"Updated Successfully",Toast.LENGTH_SHORT).show();
+        Toast.makeText(rootView.getContext(), "Updated Successfully", Toast.LENGTH_SHORT).show();
         App.getInstance().setUser(user);
-        App.getInstance().setValue("current",user);
+        App.getInstance().setValue("current", user);
         App.getInstance().setValue("isPhoneVerified", user.isVerified());
         updated = false;
+        dialog.dismiss();
     }
 
     @Override
     public void onChange(String... texts) {
+        dialog.dismiss();
         addressTextView.setText(texts[0]);
         pinTextView.setText(texts[1]);
         updated = true;
+    }
+
+    @Override
+    public void onCancel() {
+        dialog.dismiss();
     }
 }

@@ -13,6 +13,7 @@ import com.pentateuch.watersupply.model.User;
 public class App extends Application {
     private static App instance;
     private SharedPreferences mPreferences;
+    public static final String PREF_NAME = "User";
     private User user;
 
     public static App getInstance() {
@@ -32,7 +33,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        mPreferences = getSharedPreferences("User", MODE_PRIVATE);
+        mPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
     }
 

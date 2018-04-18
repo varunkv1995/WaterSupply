@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,13 +17,19 @@ import com.pentateuch.watersupply.App;
 import com.pentateuch.watersupply.R;
 import com.pentateuch.watersupply.model.Product;
 import com.pentateuch.watersupply.model.User;
+import com.pentateuch.watersupply.utils.Helper;
+import com.pentateuch.watersupply.utils.ProgressDialog;
+import com.tech.imageloader.core.ImageFetcher;
 
 public class CashOnDelivery extends AppCompatActivity implements OnCompleteListener<Void> {
 
     ImageView product_cash_on_delivery;
-    TextView quantity, totalTextView, adressTextView, dateTimeTextView,timeTextView;
+    TextView quantity, totalTextView, adressTextView, dateTimeTextView, timeTextView;
     private Product product;
     private User user;
+    private String transactionID;
+    private ProgressDialog dialog;
+    private RelativeLayout layout;
 
 
     @Override
@@ -34,13 +40,14 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
         if (extras != null) {
             product = extras.getParcelable("product");
         }
+        layout = findViewById(R.id.root_cod);
         dateTimeTextView = findViewById(R.id.date_and_time);
         user = App.getInstance().getUser();
         quantity = findViewById(R.id.tv_quantity);
         product_cash_on_delivery = findViewById(R.id.image_product_view_cash);
-        timeTextView=findViewById(R.id.time);
+        timeTextView = findViewById(R.id.time);
         timeTextView.setText(product.getTime());
-        product_cash_on_delivery.setImageResource(product.getDrawable());
+        ImageFetcher.with(this).from(product.getImageUrl()).into(product_cash_on_delivery);
         adressTextView = findViewById(R.id.tv_adress);
         quantity = findViewById(R.id.tv_quantity);
         quantity.setText(String.valueOf(product.getQuantity()));
@@ -53,20 +60,25 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
 
 
     public void ConfirmOrder(View view) {
+        dialog = new ProgressDialog(this);
+        dialog.showProgressAt(layout);
+        product.setDest(adressTextView.getText().toString());
+        transactionID = new Helper().getTransactionID();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        product.setStatus("pending");
-        reference.child("MyOrder").child(user.getUid()).push().setValue(product).addOnCompleteListener(this);
+        reference.child("MyOrder").child(user.getUid()).child(transactionID).setValue(product).addOnCompleteListener(this);
 
     }
 
     @Override
     public void onComplete(@NonNull Task<Void> task) {
-            if(task.isSuccessful()){
-                Toast.makeText(this, "Order is Confirmed", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
+        if (task.isSuccessful()) {
+            dialog.dismiss();
+            Intent intent = new Intent(this, OrderSummaryActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("transactionID", transactionID);
+            intent.putExtra("amount",product.getTotalCostInRs());
+            startActivity(intent);
+        }
     }
 }
