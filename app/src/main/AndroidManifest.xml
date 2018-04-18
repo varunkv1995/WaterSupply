@@ -76,7 +76,11 @@
         <activity
             android:name=".activity.PaymentGateway"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".service.FirebaseTokenService"

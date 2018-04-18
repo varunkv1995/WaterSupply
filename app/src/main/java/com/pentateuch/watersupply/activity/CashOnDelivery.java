@@ -24,7 +24,10 @@ import com.tech.imageloader.core.ImageFetcher;
 public class CashOnDelivery extends AppCompatActivity implements OnCompleteListener<Void> {
 
     ImageView product_cash_on_delivery;
-    TextView quantity, totalTextView, adressTextView, dateTimeTextView, timeTextView;
+    TextView quantity;
+    TextView totalTextView;
+    TextView addressTextView;
+    TextView dateTimeTextView;
     private Product product;
     private User user;
     private String transactionID;
@@ -41,20 +44,19 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
             product = extras.getParcelable("product");
         }
         layout = findViewById(R.id.root_cod);
-        dateTimeTextView = findViewById(R.id.date_and_time);
+        dateTimeTextView = findViewById(R.id.tv_date_time);
         user = App.getInstance().getUser();
         quantity = findViewById(R.id.tv_quantity);
         product_cash_on_delivery = findViewById(R.id.image_product_view_cash);
-        timeTextView = findViewById(R.id.time);
-        timeTextView.setText(product.getTime());
+        dateTimeTextView.setText(product.getDate());
         ImageFetcher.with(this).from(product.getImageUrl()).into(product_cash_on_delivery);
-        adressTextView = findViewById(R.id.tv_adress);
+        addressTextView = findViewById(R.id.tv_address);
         quantity = findViewById(R.id.tv_quantity);
         quantity.setText(String.valueOf(product.getQuantity()));
-        totalTextView = findViewById(R.id.tv_total_amount);
+        totalTextView = findViewById(R.id.tv_amount);
         totalTextView.setText(product.getTotalCostInRs());
-        adressTextView.setText(this.user.getAddress());
-        dateTimeTextView.append(product.getDate());
+        addressTextView.setText(this.user.getAddress());
+        dateTimeTextView.append(" " + product.getDate());
 
     }
 
@@ -62,7 +64,7 @@ public class CashOnDelivery extends AppCompatActivity implements OnCompleteListe
     public void ConfirmOrder(View view) {
         dialog = new ProgressDialog(this);
         dialog.showProgressAt(layout);
-        product.setDest(adressTextView.getText().toString());
+        product.setDest(addressTextView.getText().toString());
         transactionID = new Helper().getTransactionID();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("MyOrder").child(user.getUid()).child(transactionID).setValue(product).addOnCompleteListener(this);

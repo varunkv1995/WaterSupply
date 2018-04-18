@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -111,7 +113,8 @@ public class PaymentGateway extends AppCompatActivity implements OnCompleteListe
             String randString = Integer.toString(rand.nextInt()) + (System.currentTimeMillis() / 1000L);
             txnId = hashCal("SHA-256", randString).substring(0, 20);
             params.put("txnId", txnId);
-        }
+        } else
+            txnId = params.get("txnId");
         hash = "";
         String hashSequence = "key|txnId|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10";
         if (empty(params.get("hash")) && params.size() > 0) {
@@ -159,6 +162,11 @@ public class PaymentGateway extends AppCompatActivity implements OnCompleteListe
                 if (!progressDialog.isShowing()) {
                     progressDialog.show();
                 }
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                progressDialog.dismiss();
             }
         });
         webView.setVisibility(View.VISIBLE);

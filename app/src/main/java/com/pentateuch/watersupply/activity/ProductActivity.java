@@ -69,7 +69,7 @@ public class ProductActivity extends AppCompatActivity implements OnCompleteList
         quantityTextView = findViewById(R.id.tv_product_quantity);
         quantityTextView.setText(String.valueOf(product.getQuantity()));
         TextView priceTextView = findViewById(R.id.tv_product_price);
-        String price = String.format("Price : %s Rs", product.getPrice());
+        String price = String.format("Price : ₹%s", product.getPrice());
         Spannable wordSpan = new SpannableString(price);
         wordSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 8, price.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         priceTextView.setText(wordSpan);

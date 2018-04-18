@@ -5,11 +5,10 @@
     android:background="@color/dimWhite"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="8sp"
     android:columnWidth="140dp"
     android:gravity="center"
-    android:horizontalSpacing="10dp"
+    android:horizontalSpacing="5dp"
     android:numColumns="auto_fit"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="10dp"
+    android:verticalSpacing="5dp"
     tools:context=".fragment.HomeFragment" />
