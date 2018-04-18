@@ -28,7 +28,7 @@ public class FirebaseRecieveService extends FirebaseMessagingService {
 
     private void handleData(String message) {
         String imageUrl = "";
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+        if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
             Intent pushNotification = new Intent(NotifyConfig.PUSH_NOTIFICATION);
             pushNotification.putExtra("message", message);
@@ -65,7 +65,7 @@ public class FirebaseRecieveService extends FirebaseMessagingService {
     }
 
     private void handleNotification(String body) {
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+        if (NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
             Intent pushNotification = new Intent(NotifyConfig.PUSH_NOTIFICATION);
             pushNotification.putExtra("message", body);
